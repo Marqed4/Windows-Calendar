@@ -1,0 +1,21 @@
+Original Windows Calendar has:
+
+Priority: - >
+
+Ability to create a new event. An event is specified as a notification for a date and time, etc...
+
+36 tiles depicting days of the current month, last month (start: top left) and future month (start: bottom right).
+
+Ability to view by Day/ Week/ Year.
+
+Up & Down buttons to switch between weeks.
+
+Luxury: - >
+
+7 day forecast increment next to the integer of each day's month.
+
+View Bar: - > - >
+Email View:
+Ability to send an email in the bottom left of the screen. 
+Calendar View:
+Settings View:
