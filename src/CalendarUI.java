@@ -34,6 +34,8 @@ public class CalendarUI extends StackPane {
 
             grid.add(cell, col, row);
         }
+
+        this.getChildren().add(grid);
     }
 
     private VBox createCell(LocalDate date) {
