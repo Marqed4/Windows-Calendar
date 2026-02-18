@@ -1,37 +1,55 @@
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.PriorityQueue;
-import java.util.Scanner;
-import java.util.Queue;
+import java.util.*;
 import java.io.File;
+import java.util.List;
+
+/*
+todo
+Implement SQL Lite in app database for alarms instead of records by text file
+*/
 
 public class DateAlarm {
     Queue<LocalDateTime> alarms;
-    String[] title;
-    String[] desc;
+
+    //List of lists includes LocalDateTime(s) & notification information
+    List<List<String>> alarms_data;
 
     //Creates a DataAlarm Object
-    //Notification String data format: LocalDateTime | Title | Description
+    //Notification String data format: LocalDateTime | Title | Description (Key: | = New Line)
     public DateAlarm() throws IOException {
         this.alarms = new PriorityQueue<>();
-
         Scanner sc;
 
-        //Checks if the "Notification_Data" file exists, if not it creates one.
-        String appDataAddress = System.getenv("APPDATA");
         try {
-            sc = new Scanner(new File(appDataAddress + "\\Windows Calendar\\Notification_Data"));
+            sc = new Scanner(new File(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data"));
         } catch (FileNotFoundException e) {
-            File Notification_Data = new File(appDataAddress + "\\Windows Calendar\\Notification_Data");
-            Notification_Data.createNewFile();
-            sc = new Scanner(new File(appDataAddress + "\\Windows Calendar\\Notification_Data"));
+            File Notification_Data = new File(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data");
+            boolean created = Notification_Data.createNewFile();
+
+            if (created) {
+                sc = new Scanner(new File(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data"));
+            } else {
+                throw new FileNotFoundException(
+                        "Failed to create Notification_Data file at: " + Notification_Data);
+            }
         }
 
         //Loads notification data into DataAlarm object
         while (sc.hasNextLine()) {
-            this.alarms.add(LocalDateTime.parse(sc.nextLine()));
+            String localDateTime = sc.nextLine();
+            this.alarms.add(LocalDateTime.parse(localDateTime));
+            List<String> data = new ArrayList<>();
+
+            data.add(localDateTime);
+            data.add(sc.nextLine());
+            data.add(sc.nextLine());
+
+            this.alarms_data.add(data);
         }
 
 
@@ -42,21 +60,34 @@ public class DateAlarm {
         }
     }
 
-    public void setAlarm(LocalDateTime time) throws IOException {
+    public void setAlarm(LocalDateTime time, String title, String desc) throws IOException {
         this.alarms.add(time);
 
         //Add alarm data to "Notification_Data" file
-        String appDataAddress = System.getenv("APPDATA");
+        PrintWriter pw;
 
-        Scanner sc;
         try {
-            sc = new Scanner(new File(appDataAddress + "\\Windows Calendar\\Notification_Data"));
+            pw = new PrintWriter(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data");
         } catch (FileNotFoundException e) {
-            File Notification_Data = new File(appDataAddress + "\\Windows Calendar\\Notification_Data");
-            Notification_Data.createNewFile();
-            sc = new Scanner(new File(appDataAddress + "\\Windows Calendar\\Notification_Data"));
+            File Notification_Data = new File(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data");
+            boolean created = Notification_Data.createNewFile();
+
+            if (created) {
+                pw = new PrintWriter(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data");
+            } else {
+                throw new FileNotFoundException(
+                        "Failed to create Notification_Data file at: " + Notification_Data);
+            }
         }
 
+        /*
+        todo
+        PrintWriter should add the future date time into the log and current Queue object.
+        */
+
+        pw.println(time);
+        pw.println(title);
+        pw.println(desc);
     }
 
     public void removeAlarm(LocalDateTime time) {
@@ -65,26 +96,39 @@ public class DateAlarm {
         //remove the alarm info from the Notification_Data.txt
     }
 
-    //I learned threads dealing with memory allocation via malloc! Can it come in handy here?
+    //I learned somewhat about threads dealing with memory allocation via malloc! Can it come in handy here?
+    //checkAlarm should be called when the application is started. From there it remains a background process.
     public void checkAlarm() throws InterruptedException {
-        AlarmActivation alarm;
 
         Thread thread = new Thread(() -> {
             long delay = Duration.between(this.alarms.peek(), LocalDateTime.now()).getSeconds();
+            AlarmActivation alarm;
 
             try {
                 if (delay > 0) {
                     Thread.sleep(delay * 1000);
                 }
 
-                alarm = new AlarmActivation();
-                removeAlarm(LocalDateTime.now());
-
+                for (List<String> data : this.alarms_data) {
+                    if (Objects.equals(data.getFirst(), this.alarms.peek().toString())) {
+                        alarm = new AlarmActivation(data.get(1), data.get(2));
+                        alarm.displayTray();
+                        alarm.playDefaultNotiSound();
+                    }
+                }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+
+            } catch (AWTException e) {
+                throw new RuntimeException(e);
             }
         });
 
         thread.start();
     }
 }
+
+//Notification Example
+//2026-18-03T17:05:00
+//Homework
+//Essentials of Software Engineering Chapter 6 Reading
