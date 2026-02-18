@@ -33,8 +33,12 @@ public class AlarmActivation {
     }
 
     public void playDefaultNotiSound() {
-        File file = new File(System.getenv("APPDATA") + "\\Windows Calendar\\Assets\\Windows Notification.mp3");
-        MediaPlayer player = new MediaPlayer(new Media(file.toURI().toString()));
-        player.play();
+        File noti_sound = new File(System.getenv("APPDATA") + "\\Windows Calendar\\Assets\\Windows Notification.mp3");
+        MediaPlayer player1 = new MediaPlayer(new Media(noti_sound.toURI().toString()));
+        player1.play();
+
+        File chime_sound  = new File(System.getenv("APPDATA") + "\\Windows Calendar\\Assets\\Windows 10 Calendar Chime.mp3\"");
+        MediaPlayer player2 = new MediaPlayer(new Media(chime_sound.toURI().toString()));
+        player2.play();
     }
 }
