@@ -17,7 +17,6 @@ public class CalendarUI extends StackPane {
         grid.setHgap(2);
         grid.setVgap(2);
 
-        // Add constraints ONCE
         for (int i = 0; i < 6; i++) {
             ColumnConstraints col = new ColumnConstraints();
             col.setPercentWidth(100.0 / 6);
@@ -30,7 +29,6 @@ public class CalendarUI extends StackPane {
             grid.getRowConstraints().add(row);
         }
 
-        // CSS
         this.getStylesheets().add(
                 getClass().getResource("/CalendarUI.css").toExternalForm()
         );
