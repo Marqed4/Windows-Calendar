@@ -1,3 +1,5 @@
+package com.zachery.windowscalendar;
+
 import java.awt.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -130,5 +132,10 @@ public class DateAlarm {
 
 //Notification Example
 //2026-18-03T17:05:00
+//Homework
+//Essentials of Software Engineering Chapter 6 Reading
+
+//Notification Example
+//2026-23-03T17:05:00
 //Homework
 //Essentials of Software Engineering Chapter 6 Reading

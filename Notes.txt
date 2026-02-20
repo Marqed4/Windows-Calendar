@@ -18,4 +18,9 @@ View Bar: - > - >
 Email View:
 Ability to send an email in the bottom left of the screen. 
 Calendar View:
-Settings View:
+Settings View: Dynamic user set background image, Set titles to certain gifs & images.
+
+
+Media player opening via alarm.
+YouTube video opening via alarm.
+Executable opening via alarm.

@@ -1,18 +1,15 @@
+package com.zachery.windowscalendar;
+
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.event.ActionEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 /*
 todo
 Priority:
 
-1. Create 36 calendar panes
 2. Up & Down buttons to switch/navigate between weeks.
 3. Allow the right clicking on the pane shows event menu.
 4. Ability to view calendar by Day/ Week/ Year.

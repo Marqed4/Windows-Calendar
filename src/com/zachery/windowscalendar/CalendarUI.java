@@ -1,6 +1,7 @@
+package com.zachery.windowscalendar;
+
 import javafx.scene.layout.*;
 import javafx.scene.control.Label;
-
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;

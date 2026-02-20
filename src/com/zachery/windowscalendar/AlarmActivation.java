@@ -1,3 +1,5 @@
+package com.zachery.windowscalendar;
+
 import javafx.scene.media.MediaPlayer;
 
 import java.awt.TrayIcon.MessageType;
