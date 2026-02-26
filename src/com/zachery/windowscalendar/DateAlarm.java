@@ -25,25 +25,13 @@ public class DateAlarm {
     //Notification String data format: LocalDateTime | Title | Description (Key: | = New Line)
     public DateAlarm() throws IOException {
         this.alarms = new PriorityQueue<>();
-        Scanner sc;
 
-        try {
-            sc = new Scanner(new File(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data"));
-        } catch (FileNotFoundException e) {
-            File Notification_Data = new File(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data");
-            boolean created = Notification_Data.createNewFile();
-
-            if (created) {
-                sc = new Scanner(new File(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data"));
-            } else {
-                throw new FileNotFoundException(
-                        "Failed to create Notification_Data file at: " + Notification_Data);
-            }
-        }
+        Scanner sc = getNotificationData();
 
         //Loads notification data into DataAlarm object
         while (sc.hasNextLine()) {
             String localDateTime = sc.nextLine();
+
             this.alarms.add(LocalDateTime.parse(localDateTime));
             List<String> data = new ArrayList<>();
 
@@ -66,21 +54,7 @@ public class DateAlarm {
         this.alarms.add(time);
 
         //Add alarm data to "Notification_Data" file
-        PrintWriter pw;
-
-        try {
-            pw = new PrintWriter(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data");
-        } catch (FileNotFoundException e) {
-            File Notification_Data = new File(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data");
-            boolean created = Notification_Data.createNewFile();
-
-            if (created) {
-                pw = new PrintWriter(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data");
-            } else {
-                throw new FileNotFoundException(
-                        "Failed to create Notification_Data file at: " + Notification_Data);
-            }
-        }
+        PrintWriter pw = getPrintWriter();
 
         /*
         todo
@@ -127,6 +101,42 @@ public class DateAlarm {
         });
 
         thread.start();
+    }
+
+    public Scanner getNotificationData() throws IOException  {
+        Scanner sc;
+        try {
+            sc = new Scanner(new File(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data"));
+        } catch (FileNotFoundException e) {
+            File Notification_Data = new File(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data");
+            boolean created = Notification_Data.createNewFile();
+            if (created) {
+                sc = new Scanner(new File(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data"));
+            } else {
+                throw new FileNotFoundException(
+                        "Failed to create Notification_Data file at: " + Notification_Data);
+            }
+        }
+        return sc;
+    }
+
+    public PrintWriter getPrintWriter() throws IOException  {
+        PrintWriter pw;
+
+        try {
+            pw = new PrintWriter(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data");
+        } catch (FileNotFoundException e) {
+            File Notification_Data = new File(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data");
+            boolean created = Notification_Data.createNewFile();
+
+            if (created) {
+                pw = new PrintWriter(System.getenv("APPDATA") + "\\Windows Calendar\\Notification_Data");
+            } else {
+                throw new FileNotFoundException(
+                        "Failed to create Notification_Data file at: " + Notification_Data);
+            }
+        }
+        return pw;
     }
 }
 
